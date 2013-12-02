@@ -448,27 +448,7 @@ CERT *ssl_cert_dup(CERT *cert)
 	return(ret);
 	
 err:
-#ifndef OPENSSL_NO_RSA
-	if (ret->rsa_tmp != NULL)
-		RSA_free(ret->rsa_tmp);
-#endif
-#ifndef OPENSSL_NO_DH
-	if (ret->dh_tmp != NULL)
-		DH_free(ret->dh_tmp);
-#endif
-#ifndef OPENSSL_NO_ECDH
-	if (ret->ecdh_tmp != NULL)
-		EC_KEY_free(ret->ecdh_tmp);
-#endif
-
-#ifndef OPENSSL_NO_TLSEXT
-	if (ret->custom_cli_ext_records)
-		OPENSSL_free(ret->custom_cli_ext_records);
-	if (ret->custom_srv_ext_records)
-		OPENSSL_free(ret->custom_srv_ext_records);
-#endif
-
-	ssl_cert_clear_certs(ret);
+	ssl_cert_free(ret);
 
 	return NULL;
 	}
