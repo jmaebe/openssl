@@ -1763,13 +1763,14 @@ static int cert_set_custom_cli_ext(CERT *cert, unsigned short ext_type,
 		if (ext_type == cert->custom_cli_ext_records[i].ext_type)
 			return 0;
 
-	cert->custom_cli_ext_records = OPENSSL_realloc(cert->custom_cli_ext_records,
-						      (cert->custom_cli_ext_records_count + 1) * 
-						      sizeof(custom_cli_ext_record));
-	if (!cert->custom_cli_ext_records) {
+	record = OPENSSL_realloc(cert->custom_cli_ext_records,
+				      (cert->custom_cli_ext_records_count + 1) *
+				      sizeof(custom_cli_ext_record));
+	if (!record) {
 		cert->custom_cli_ext_records_count = 0;
 		return 0;
 	}
+	cert->custom_cli_ext_records = record;
 	cert->custom_cli_ext_records_count++;
 	record = &cert->custom_cli_ext_records[cert->custom_cli_ext_records_count - 1];
 	record->ext_type = ext_type;
@@ -1791,13 +1792,14 @@ static int cert_set_custom_srv_ext(CERT *cert, unsigned short ext_type,
 		if (ext_type == cert->custom_srv_ext_records[i].ext_type)
 			return 0;
 
-	cert->custom_srv_ext_records = OPENSSL_realloc(cert->custom_srv_ext_records,
-						      (cert->custom_srv_ext_records_count + 1) * 
-						      sizeof(custom_srv_ext_record));
-	if (!cert->custom_srv_ext_records) {
-		cert->custom_srv_ext_records_count = 0;
+	record = OPENSSL_realloc(cert->custom_srv_ext_records,
+				      (cert->custom_srv_ext_records_count + 1) *
+				      sizeof(custom_srv_ext_record));
+	if (!record) {
+		cert->custom_cli_ext_records_count = 0;
 		return 0;
 	}
+	cert->custom_srv_ext_records = record;
 	cert->custom_srv_ext_records_count++;
 	record = &cert->custom_srv_ext_records[cert->custom_srv_ext_records_count - 1];
 	record->ext_type = ext_type;
